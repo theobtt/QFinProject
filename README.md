@@ -175,7 +175,7 @@ Email a single file to `qfinorderbot@gmail.com` containing your `PlayerAlgorithm
 
 I do not like variance. As such, when assessing the bots I will run them many times (~20 each) on an additional 20k "rounds" and take the average PnL. 
 
-**Performance Warning**: If the average running time is > 2 minutes per iteration, I will deduct some number of points. I do not believe this is preventing anything that you would want to do anyway, but if this is causing problems, please send your code to your mentor/Me/Sithum and we can have a look at it.
+**Performance Warning**: If the average running time is > 2 minutes per iteration, I will deduct some number of points. I do not believe this is preventing anything that you would want to do anyway, but if this is causing problems, please send your code to your mentor/Me/Sithum and we can have a look at it. Note that the base code with no expanded your_algo takes ~35s on my machine -> you may need to scale your time based on this, especially as this code seems to run quite slowly on Windows machines.
 
 **Note**: This assessment function 𝔼[PnL] may change for future rounds. SIG recently did one of these with the loss function of 𝔼[PnL] - 0.1 × STD[PnL] that seemed reasonable, so just pay attention for future weeks.
 
