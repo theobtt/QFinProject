@@ -50,11 +50,11 @@ class PlayerAlgorithm:
         for p in self.products:
             self.last_flow[p.ticker] = flow
 
-
     def send_messages(self, book: Dict[str, Dict[str, List[Rest]]]) -> List[Msg]:
         msgs: List[Msg] = []
         for p in self.products:
             tkr, mpv = p.ticker, p.mpv
+            pos_limit = 200
 
             # cancel all our resting orders
             for side in ("Buy", "Sell"):
@@ -86,8 +86,27 @@ class PlayerAlgorithm:
             bid_px = math.floor(bid_px / mpv) * mpv
             ask_px = math.ceil(ask_px / mpv) * mpv
 
-            # currently placing one order (BASE SIZE) on both sides
-            msgs.append(self.create_order(tkr, self.BASE_SIZE, bid_px, "Buy"))
-            msgs.append(self.create_order(tkr, self.BASE_SIZE, ask_px, "Sell"))
+            # current position for certain ticker (everything below this is to ensure position limit)
+            # unfortunately still does not work
+            curr = self.pos[tkr]
+
+            # how much can we trade without breaking limit
+            max_buy_cap  = max(0, pos_limit - curr) 
+            max_sell_cap = max(0, curr + pos_limit)  
+
+            # check if we are at or over
+            over_long = curr >=  pos_limit
+            over_short = curr <= -pos_limit
+
+            # if we at or over limit, dont buy/sell (depending on what side of limit)
+            # else buy the smallest of base size or the max buy cap above
+            buy_size = 0 if over_long else min(self.BASE_SIZE, max_buy_cap)
+            sell_size = 0 if over_short else min(self.BASE_SIZE, max_sell_cap)
+
+            # place orders that we are allowed to place
+            if buy_size > 0:
+                msgs.append(self.create_order(tkr, buy_size, bid_px, "Buy"))
+            if sell_size > 0:
+                msgs.append(self.create_order(tkr, sell_size, ask_px, "Sell"))
         return msgs
 
