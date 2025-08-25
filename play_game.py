@@ -34,7 +34,7 @@ sys.path = original_sys_path
 
 from your_algo import PlayerAlgorithm
 
-uec = Product("UEC", mpv=0.1, pos_limit=200, fine=0)
+uec = Product("UEC", mpv=0.1, pos_limit=200, fine=20)
 
 products = [uec]
 
